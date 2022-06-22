@@ -13,7 +13,7 @@ import reportWebVitals from './reportWebVitals';
 // uri specifies the URL of our GraphQL server.
 // cache is an instance of InMemoryCache, which Apollo Client uses to cache query results after fetching them.
 const client = new ApolloClient({
-  uri: 'https://48p1r2roz4.sse.codesandbox.io',
+  uri: 'https://71z1g.sse.codesandbox.io/',
   cache: new InMemoryCache()
 });
 // end of apollo clirnt set up
@@ -34,31 +34,36 @@ client
 //
 // ------fetching data using useQuery----
 //set up the query:
-const EXCHANGE_RATES = gql`
-query GetExchangeRates {
-  rates(currency: "USD"){
-    currency
-    rate
-  }
-}
+const GET_DOGS = gql`
+query GetDogs {
+  query GetDogs{
+    dogs{
+      id
+      breed
+    }
+  }  
 `;
 //end of query set up
 //
-// then we have to define a component that executes our query(GetExchangeRates)
+// then we have to define a component that executes our query(GetDogs)
 // this function will then be added to our component tree(the function was exported to App.js)
-export default function ExchangeRates(){
-  const {loading,error, data} = useQuery(EXCHANGE_RATES);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error:</p>;
+export default function Dogs(){
+  const {loading,error, data} = useQuery(GET_DOGS);
+  // note that the line below differs from main
+  if (loading) return 'Loading...';
+  if (error) return `error! ${error.message}`;
   //When the result of your query comes back, it's attached to the data property
   // rates comes from the query 
-  return data.rates.map(({currency, rate})=> (
-    <div key={currency}>
-      <p>
-        {currency}: {rate}
-      </p>
-    </div>
-  ));
+  return (
+    <select name='dog' onChange={onDogSelected}>
+{data.dogs.map((dog)=> (
+  <option key={dog.id} value={dog.breed}>
+    {/* displays dog breed */}
+    {dog.breed} 
+  </option>
+))}
+</select>
+); 
 }
 
 
