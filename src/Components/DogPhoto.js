@@ -1,4 +1,4 @@
-import {gql, useQuery} from '@apollo/client'
+import { gql, useQuery } from "@apollo/client";
 
 //query
 const GET_DOG_PHOTO = gql`
@@ -11,26 +11,32 @@ const GET_DOG_PHOTO = gql`
 `;
 // ----function to execute the query----
 export default function DogPhoto({ breed }) {
-    const { loading, error, data, refetch, networkStatus } = useQuery(
-      GET_DOG_PHOTO,
-      {
-        variables: { breed },
-        notifyOnNetworkStatusChange: true,
-        // pollInterval: 2000
-      }
-    );
-  
-    if (networkStatus === 4) return <p>Refetching!</p>;
-    if (loading) return null;
-    if (error) return `Error!: ${error}`;
-// ---- end of function to execute the query----
-  
-    return (
+  const { loading, error, data, refetch, networkStatus } = useQuery(
+    GET_DOG_PHOTO,
+    {
+      variables: { breed },
+      notifyOnNetworkStatusChange: true,
+      // pollInterval: 2000
+    }
+  );
+
+  if (networkStatus === 4) return <p>Refetching!</p>;
+  if (loading) return null;
+  if (error) return `Error!: ${error}`;
+  // ---- end of function to execute the query----
+
+  return (
+    <div>
       <div>
-        <div>
-          <img src={data.dog.displayImage} style={{ height: 100, width: 100 }} alt="no alt"/>
-        </div>
-        <button onClick={() => refetch()}>Refetch!</button>
+        {!error && (
+          <img
+            src={data.dog.displayImage}
+            style={{ height: 100, width: 100 }}
+            alt="no alt"
+          />
+        )}
       </div>
-    );
-  }
+      <button onClick={() => refetch()}>Refetch!</button>
+    </div>
+  );
+}
